@@ -9,6 +9,7 @@ Select company, days_since_posting
 from data_analyst_jobs
 limit 10
 
+
 --3. How many postings are in Tennessee? 
 --How many are there in either Tennessee or Kentucky?
 
@@ -24,7 +25,8 @@ where location IN ('TN', 'KY')
 
 select count(*) AS tn_posting
 from data_analyst_jobs
-where star_rating <= 4
+where star_rating > 4 
+and location = 'TN'
 
 --5. How many postings in the dataset have a review count between 500 and 1000?
 
@@ -36,18 +38,18 @@ where review_count between 500 and 1000
 --The output should show the state as `state` and the average rating for the state as `avg_rating`.
 --Which state shows the highest average rating?
 
-select location, avg(star_rating)
+select location AS state, avg(star_rating) AS avg_rating
 from data_analyst_jobs
 where star_rating is not null
-group by location, star_rating
-order by star_rating DESC
+group by location
+order by avg_rating DESC
 
---7.Select unique job titles from the data_analyst_jobs table. How many are there?
+--7. Select unique job titles from the data_analyst_jobs table. How many are there?
 
-select Distinct(title)
+select Distinct(title) AS num_title
 from data_analyst_jobs
 
-select count(distinct title)
+select count(title)
 from data_analyst_jobs
 
 --8. How many unique job titles are there for California companies?
@@ -81,6 +83,25 @@ select company, round(avg(star_rating),2)
 from data_analyst_jobs
 where review_count > 5000
 and company is not null
-group by company, star_rating
+group by star_rating, company
 order by star_rating DESC
+
+--11. Find all the job titles that contain the word ‘Analyst’. How many different job titles are there? 
+
+Select Distinct(title) AS job_title
+from data_analyst_jobs
+where title ILIKE '%Analyst%'
+
+select count(distinct title)
+from data_analyst_jobs
+where title ilike '%Analyst%'
+
+--12. How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’?
+--What word do these positions have in common?
+
+select distinct (title) AS job_title
+from data_analyst_jobs
+where title NOT ILIKE '%Analyst%'
+and title NOT ILIKE '%Analytics%'
+
 
