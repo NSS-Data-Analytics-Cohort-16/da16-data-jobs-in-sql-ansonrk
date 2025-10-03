@@ -1,4 +1,5 @@
 --1)How many rows are in the data_analyst_jobs table?
+
 Select count(*) AS total_rows
 from data_analyst_jobs
 
@@ -30,7 +31,7 @@ and location = 'TN'
 
 --5. How many postings in the dataset have a review count between 500 and 1000?
 
-select count(*) AS re_500_1000
+select count(*) AS rev_count
 from data_analyst_jobs
 where review_count between 500 and 1000
 
@@ -38,7 +39,7 @@ where review_count between 500 and 1000
 --The output should show the state as `state` and the average rating for the state as `avg_rating`.
 --Which state shows the highest average rating?
 
-select location AS state, avg(star_rating) AS avg_rating
+select location AS state, round(avg(star_rating),2) AS avg_rating
 from data_analyst_jobs
 where star_rating is not null
 group by location
@@ -49,7 +50,7 @@ order by avg_rating DESC
 select Distinct(title) AS num_title
 from data_analyst_jobs
 
-select count(title)
+select count(distinct title)
 from data_analyst_jobs
 
 --8. How many unique job titles are there for California companies?
@@ -103,5 +104,28 @@ select distinct (title) AS job_title
 from data_analyst_jobs
 where title NOT ILIKE '%Analyst%'
 and title NOT ILIKE '%Analytics%'
+
+--**BONUS:**
+--You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks. 
+-- - Disregard any postings where the domain is NULL. 
+-- - Order your results so that the domain with the greatest number of `hard to fill` jobs is at the top. 
+--  - Which three industries are in the top 3 on this list? How many jobs have been listed for more than 3 weeks for each of the top 3?
+
+Select count(*) AS hard_to_fill_jobs, company
+from data_analyst_jobs
+where domain IS NOT NULL
+AND skill LIKE '%SQL%'
+AND days_since_posting > 21
+group by domain, company
+order by hard_to_fill_jobs DESC
+
+Select count(*) AS hard_to_fill_jobs, company
+from data_analyst_jobs
+where domain IS NOT NULL
+AND skill LIKE '%SQL%'
+AND days_since_posting > 21
+group by domain, company
+order by hard_to_fill_jobs DESC
+limit 3
 
 
